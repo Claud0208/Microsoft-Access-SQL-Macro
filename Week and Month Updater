@@ -1,0 +1,25 @@
+Public Sub MWMMupdater()
+    Dim db As DAO.Database
+    Dim rs As DAO.Recordset
+    Dim dadmit As Date
+    Dim intMorbidityWeek As Integer
+    Dim intMorbidityMonth As Integer
+
+    Set db = CurrentDb()
+    Set rs = db.OpenRecordset("SELECT * FROM Dengue")
+
+    Do While Not rs.EOF
+        dadmit = rs!dadmit
+        intMorbidityWeek = DatePart("ww", dadmit, vbSunday, vbFirstFourDays)
+        intMorbidityMonth = DatePart("m", dadmit)
+        rs.Edit
+        rs!MorbidityWeek = intMorbidityWeek
+        rs!MorbidityMonth = intMorbidityMonth
+        rs.Update
+        rs.MoveNext
+    Loop
+
+    rs.Close
+    Set rs = Nothing
+    Set db = Nothing
+End Sub
