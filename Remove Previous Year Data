@@ -1,0 +1,16 @@
+Public Sub RemoveNon2023Records()
+Dim db As DAO.Database
+Dim strSQL As String
+Dim intRowsAffected As Long
+Set db = CurrentDb()
+strSQL = "DELETE FROM Dengue WHERE Year <> 2023"
+db.Execute strSQL, dbFailOnError
+
+intRowsAffected = db.RecordsAffected
+
+MsgBox "Deleted " & intRowsAffected & " record(s) with non-2023 year value."
+
+Set db = Nothing
+
+End Sub
+
