@@ -1,0 +1,56 @@
+Sub UpdateAgeFields()
+    Dim db As DAO.Database
+    Dim rs As DAO.Recordset
+    
+    Set db = CurrentDb()
+    Set rs = db.OpenRecordset("Dengue")
+    
+    Do While Not rs.EOF
+        ' Check if DOB and Dadmit fields contain Null
+        If Not (IsNull(rs("DOB")) Or IsNull(rs("Dadmit"))) Then
+            ' Calculate the age in years, months, and days
+            dob = rs("DOB")
+            dadmit = rs("Dadmit")
+            
+            ageYears = DateDiff("yyyy", dob, dadmit)
+            ageMonths = DateDiff("m", dob, dadmit)
+            ageDays = DateDiff("d", dob, dadmit)
+            
+            ' Adjust the age based on the day portion
+            If DateAdd("yyyy", ageYears, dob) > dadmit Then
+                ageYears = ageYears - 1
+            End If
+            
+            If DateAdd("m", ageMonths, dob) > dadmit Then
+                ageMonths = ageMonths - 1
+            End If
+            
+            If DateAdd("d", ageDays, dob) > dadmit Then
+                ageDays = ageDays - 1
+            End If
+            
+            ' Check if age in years is 0 and add decimals if necessary
+            If ageYears = 0 Then
+                ageYearsDecimal = Round(DateDiff("d", dob, dadmit) / 365.25, 2)
+            Else
+                ageYearsDecimal = ageYears
+            End If
+            
+            ' Update the age fields in the recordset
+            rs.Edit
+            rs("AgeYears") = ageYearsDecimal
+            rs("AgeMons") = ageMonths
+            rs("AgeDays") = ageDays
+            rs.Update
+        End If
+        
+        rs.MoveNext
+    Loop
+    
+    rs.Close
+    Set rs = Nothing
+    Set db = Nothing
+End Sub
+
+
+
