@@ -1,0 +1,15 @@
+Sub UpdateSpacing()
+    Dim db As Database
+    Dim rs As Recordset
+    Dim strSQL As String
+    
+    Set db = CurrentDb
+    strSQL = "UPDATE " & Screen.ActiveDatasheet.Name & " SET FullName = IIf(InStr([FullName], ', ') = 0, Replace([FullName], ',', ', '), [FullName])"
+
+    db.Execute strSQL, dbFailOnError
+    
+    Set db = Nothing
+    Set rs = Nothing
+    
+    MsgBox "Spacing updated successfully.", vbInformation
+End Sub
