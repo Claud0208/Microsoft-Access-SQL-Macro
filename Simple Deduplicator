@@ -1,0 +1,24 @@
+Public Sub RemoveDuplicateRows()
+    Dim rs As Recordset
+    Dim FullName As String
+    Dim duplicateCount As Integer
+    
+    Set rs = CurrentDb.OpenRecordset("SELECT * FROM Dengue ORDER BY FullName")
+    rs.MoveFirst
+    
+    Do Until rs.EOF
+        If rs!FullName = FullName Then
+            rs.Delete
+            duplicateCount = duplicateCount + 1
+        Else
+            FullName = rs!FullName
+        End If
+        rs.MoveNext
+    Loop
+    
+    rs.Close
+    Set rs = Nothing
+    
+    MsgBox duplicateCount & " duplicate row(s) removed."
+End Sub
+
